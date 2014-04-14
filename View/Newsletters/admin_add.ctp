@@ -3,6 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add Newsletter'); ?></legend>
 	<?php
+
 		echo $this->Form->input('nome');
 		echo $this->Form->input('email');
 	?>
