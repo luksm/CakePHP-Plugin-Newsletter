@@ -11,7 +11,7 @@ class NewslettersController extends NewsletterAppController {
      *
      * @var array
      */
-    public $components = array('Paginator');
+    public $components = array('Paginator', 'Auth');
 
     /**
      * beforeFilter allow the user to do some actions
@@ -22,7 +22,7 @@ class NewslettersController extends NewsletterAppController {
     {
         parent::beforeFilter();
         $this->Auth->allow(array('add'));
-    }
+    } 
 
     /**
      * add method
@@ -35,7 +35,7 @@ class NewslettersController extends NewsletterAppController {
             $this->Newsletter->create();
             if ($this->Newsletter->save($this->request->data)) {
                 $this->Session->setFlash(__('The newsletter has been saved.'));
-                return $this->redirect("/");
+                return $this->redirect($this->request->referer());
             } else {
                 $this->Session->setFlash(__('The newsletter could not be saved. Please, try again.'));
             }
