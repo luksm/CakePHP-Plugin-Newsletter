@@ -22,7 +22,7 @@ class NewslettersController extends NewsletterAppController {
     {
         parent::beforeFilter();
         $this->Auth->allow(array('add'));
-    } 
+    }
 
     /**
      * add method
@@ -32,16 +32,25 @@ class NewslettersController extends NewsletterAppController {
     public function add()
     {
         if ($this->request->is('post')) {
-            $this->Newsletter->create();
-            if ($this->Newsletter->save($this->request->data)) {
-                $this->Session->setFlash(__('The newsletter has been saved.'));
-                return $this->redirect($this->request->referer());
+            $save = $this->Newsletter->find('count', array("conditions" => array("email" => $this->request->data['Newsletter']['email'])));
+            if ($save) {
+                $this->Session->setFlash(__("The newsletter has been saved."));
+                return $this->redirect(
+                    array('plugin' => 'newsletter', 'controller' => 'newsletters', 'action' => 'add')
+                );
             } else {
-                $this->Session->setFlash(__('The newsletter could not be saved. Please, try again.'));
+                $this->Newsletter->create();
+                if ($this->Newsletter->save($this->request->data)) {
+                    $this->Session->setFlash(__('The newsletter has been saved.'));
+                    return $this->redirect(
+                        array('plugin' => 'newsletter', 'controller' => 'newsletters', 'action' => 'add')
+                    );
+                } else {
+                    $this->Session->setFlash(__('The newsletter could not be saved. Please, try again.'));
+                }
             }
         }
     }
-
 
     /**
      * admin_index method
